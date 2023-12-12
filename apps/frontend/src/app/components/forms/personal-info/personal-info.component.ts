@@ -7,20 +7,22 @@ import {
   Validators,
 } from '@angular/forms';
 import { CdtService } from '../../../services/cdt.services';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'bank-damasu-personal-info',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './personal-info.component.html',
-  styleUrl: './personal-info.component.scss',
+  styleUrls: ['./personal-info.component.scss'],
 })
 export class PersonalInfoComponent {
   personalInfoForm: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
-    private cdtService: CdtService
+    private cdtService: CdtService,
+    private router: Router
   ) {
     this.personalInfoForm = this.formBuilder.group({
       name: ['', [Validators.required]],
@@ -32,8 +34,12 @@ export class PersonalInfoComponent {
     });
   }
 
-  public onSubmit() {
-    this.cdtService.addUser(this.personalInfoForm.value).subscribe();
-    console.log(this.personalInfoForm.value);
+  onSubmit() {
+    this.cdtService.addUser(this.personalInfoForm.value).subscribe(() => {
+      console.log('Usuario agregado exitosamente');
+      // Después de guardar la información, redirige al enlace especificado
+      this.router.navigate(['/CDT/personal-info/calulate']);
+    });
   }
 }
+
